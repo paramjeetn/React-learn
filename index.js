@@ -50,7 +50,7 @@ const obj=[];
 
     
 
-app.get("/home",(req,res)=>{
+app.get("/",(req,res)=>{
     res.render("home.ejs");
  })
  app.get("/secret",(req,res)=>{
@@ -102,7 +102,7 @@ res.redirect("/secret");
 app.get('/signout', function(req, res, next){
   req.logout(function(err) {
     if (err) { return next(err); }
-    res.redirect('/home');
+    res.redirect("/");
   });
 });
 app.listen(3000,()=>{
