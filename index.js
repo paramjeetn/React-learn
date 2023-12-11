@@ -42,29 +42,18 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.urlencoded({extended:true}));
 app.use(bodyParser.json());
 app.use(express.static("public"));
-const obj=[];
-
-
-
-
 
     
-
+//home before auth
 app.get("/",(req,res)=>{
     res.render("home.ejs");
  })
- app.get("/secret",(req,res)=>{
-  if(req.isAuthenticated()){
-    res.render("secrets.ejs");
-  }
-  else{
-    res.redirect("/signin")
-  }
- })
 
+
+//get signin page
 app.get("/signin", (req, res) => {   
     res.render("signin.ejs")});
-
+//signin user
 app.post("/signin", (req,res)=>{
    const user=new User({
     username:req.body.username,
@@ -81,11 +70,14 @@ app.post("/signin", (req,res)=>{
       })
     }
    })
-   
-})
+   })
+
+
+//get signup page
 app.get("/signup",(req,res)=>{
     res.render("signup.ejs")
 })
+//signup user
 app.post("/signup",(req,res)=>{
 User.register({username:req.body.username},req.body.password, function(err,user){
   if(err){
@@ -93,18 +85,33 @@ console.log(err)
 res.redirect("/signup")
   }
   else{
+ 
+    
 passport.authenticate("local")(req,res,function(){
 res.redirect("/secret");
 })
   }
 })
 })
+
+//signout
 app.get('/signout', function(req, res, next){
   req.logout(function(err) {
     if (err) { return next(err); }
     res.redirect("/");
   });
 });
+
+//into the site after auth
+app.get("/secret",(req,res)=>{
+  if(req.isAuthenticated()){
+    res.render("secrets.ejs");
+  }
+  else{
+    res.redirect("/signin")
+  }
+ })
+
 app.listen(3000,()=>{
     console.log("Server running on port 3000")
 })
